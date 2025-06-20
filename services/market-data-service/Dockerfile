@@ -1,17 +1,16 @@
-#Build Stage
-FROM golang:1.24 AS builder 
+FROM golang:1.24-alpine
 
 WORKDIR /app
-COPY go.mod ./
-#COPY go.sum ./
+
+COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . ./
-RUN go build -o main ./cmd/main.go
+COPY . .
 
-#Run Stage
-FROM debian:bookworm-slim
-WORKDIR /app
-COPY --from=builder /app/main .
-EXPOSE 8080
+# build cmd/main.go into /app/main
+RUN go build -o main ./cmd
+
+# optional: copy env if your Go app uses godotenv
+COPY .env ./
+
 CMD ["./main"]

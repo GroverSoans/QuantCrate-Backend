@@ -1,0 +1,30 @@
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: C4killsu
+      POSTGRES_DB: marketData
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  market-data-service:
+    build: ./services/market-data-service
+    env_file:
+      - ./services/market-data-service/.env
+    depends_on:
+      - db
+    # Optional if exposing HTTP port
+    ports:
+      - "8000:8000"
+
+volumes:
+  db_data:
