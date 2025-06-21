@@ -4,4 +4,5 @@ __pycache__/
 
 # Virtual env
 venv/
+venv_ml/
 scripts/python/.venv/
