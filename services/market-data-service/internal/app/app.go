@@ -9,12 +9,11 @@ import (
 	"github.com/GroverSoans/quantcrate-backend/services/market-data-service/internal/providers"
 )
 
-
-func helloHandler(w http.ResponseWriter, r *http.Request){
+func helloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, Http!")
 }
 
-//Health checkpoint
+// Health checkpoint
 func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "OK")
@@ -25,12 +24,13 @@ func InitializeServer() {
 	db := database.InitializeDatabase()
 	defer db.Close()
 	fmt.Println("Connected to database successfully")
-	
+
 	go providers.InitializePolygon(db)
-	
+	go providers.GetFearAndGreedIndex(db)
+	go providers.GetLast15YearsInterestRates(db)
+
 	http.HandleFunc("/", helloHandler)
 	http.HandleFunc("/health", healthCheckHandler)
-
 
 	fmt.Println("Server is running at http://localhost:8000")
 	err := http.ListenAndServe(":8000", nil)
@@ -38,5 +38,4 @@ func InitializeServer() {
 		log.Fatal("Sever failed to start: ", err)
 	}
 
-	
 }
