@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS btc_fear_greed_index (
+CREATE TABLE IF NOT EXISTS fgi_index (
     id SERIAL PRIMARY KEY,
     value INT NOT NULL,                        -- E.g. 47
     value_classification TEXT NOT NULL,        -- "Neutral", "Fear", etc.
